@@ -11,12 +11,12 @@ import { log } from '../../utils/Helpers'
 const { Title } = Typography
 
 const Homepage = () => {
-  const { data: cryptoStats, isFetching } = useGetCryptosQuery() // alias
+  const { data: cryptoStats, isFetching } = useGetCryptosQuery(10) // alias
+
+  const globalStats = cryptoStats?.data?.stats
 
   // TODO fix
   if (isFetching) return 'Loading...'
-
-  const globalStats = cryptoStats?.data?.stats
 
   return (
     <>
@@ -55,6 +55,7 @@ const Homepage = () => {
           />
         </Col>
       </Row>
+
       <div className="home-heading-container">
         <Title level={2} className="home-title">
           Top 10 Crypto Currencies In The World
@@ -63,6 +64,7 @@ const Homepage = () => {
           <Link to="/cryptocurrencies">Show More</Link>
         </Title>
       </div>
+
       <CryptoCurrencies simplified />
 
       <div className="home-heading-container">
@@ -73,8 +75,8 @@ const Homepage = () => {
           <Link to="/news">Show More</Link>
         </Title>
       </div>
+
       <News simplified />
-     
     </>
   )
 }
