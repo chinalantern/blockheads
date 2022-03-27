@@ -21,13 +21,3 @@ export const cryptoApi = createApi({
 })
 
 export const {useGetCryptosQuery} = cryptoApi
-
-//     params: {
-//       referenceCurrencyUuid: 'yhjMzLPhuIDl',
-//       timePeriod: '24h',
-//       tiers: '1',
-//       orderBy: 'marketCap',
-//       orderDirection: 'desc',
-//       limit: '50',
-//       offset: '0'
-//     },
