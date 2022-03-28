@@ -15,27 +15,29 @@ import {
   ThunderboltOutlined,
 } from '@ant-design/icons'
 
-import { useGetCryptoDetailsQuery } from '../../services/CryptoApi'
-// import Loader from './Loader'
-// import LineChart from './LineChart'
+import {
+  useGetCryptoDetailsQuery,
+  useGetCryptoHistoryQuery,
+} from '../../services/CryptoApi'
+import LineChart from '../charts/LineChart'
 import { log } from '../../utils/Helpers'
 
 const { Title, Text } = Typography
 const { Option } = Select
+const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y']
 
+// TODO fix 24h Volume on Cards is rendering as undefined
 const CryptoDetails = () => {
   const { coinId } = useParams()
-  const [timePeriod, setTimePeriod] = useState('7d')
   const { data: cryptoDetailsResponse, isFetching } =
     useGetCryptoDetailsQuery(coinId)
+  const [timePeriod, setTimePeriod] = useState('7d')
+  const { data: coinHistory } = useGetCryptoHistoryQuery({ coinId, timePeriod })
+
   const cryptoDetails = cryptoDetailsResponse?.data?.coin
 
   if (isFetching) return 'Loading...'
 
-  const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y']
-
-  log(cryptoDetails)
-  
   const stats = [
     {
       title: 'Price to USD',
@@ -65,22 +67,20 @@ const CryptoDetails = () => {
     },
   ]
 
-  // log(stats)
-
   const genericStats = [
     {
       title: 'Number Of Markets',
-      value: cryptoDetails.numberOfMarkets,
+      value: cryptoDetails?.numberOfMarkets,
       icon: <FundOutlined />,
     },
     {
       title: 'Number Of Exchanges',
-      value: cryptoDetails.numberOfExchanges,
+      value: cryptoDetails?.numberOfExchanges,
       icon: <MoneyCollectOutlined />,
     },
     {
       title: 'Aprroved Supply',
-      value: cryptoDetails.approvedSupply ? (
+      value: cryptoDetails?.supply?.confirmed ? (
         <CheckOutlined />
       ) : (
         <StopOutlined />
@@ -89,12 +89,17 @@ const CryptoDetails = () => {
     },
     {
       title: 'Total Supply',
-      value: `$ ${millify(cryptoDetails.totalSupply)}`,
+      value: `$ ${
+        cryptoDetails?.supply?.total && millify(cryptoDetails?.supply?.total)
+      }`,
       icon: <ExclamationCircleOutlined />,
     },
     {
       title: 'Circulating Supply',
-      value: `$ ${millify(cryptoDetails.circulatingSupply)}`,
+      value: `$ ${
+        cryptoDetails?.supply?.circulating &&
+        millify(cryptoDetails?.supply?.circulating)
+      }`,
       icon: <ExclamationCircleOutlined />,
     },
   ]
@@ -106,22 +111,29 @@ const CryptoDetails = () => {
           {cryptoDetails.name} ({cryptoDetails.symbol}) Price
         </Title>
         <p>
-          {cryptoDetails.name} live prices in USD. View value statistics. Market
-          Cap, and Supply.
+          {cryptoDetails.name} live prices in USD. View value statistics. market
+          cap, and supply
         </p>
       </Col>
+
+      {/* Time Period Selector */}
       <Select
         defaultValue="7d"
         className="select-timeperiod"
         placeholder="Select time period"
         onChange={(value) => setTimePeriod(value)}
       >
-        {time.map((date) => (
-          <Option key={date}>{date} </Option>
+        {time.map((date, index) => (
+          <Option key={index}>{date} </Option>
         ))}
       </Select>
 
       {/* Line Chart */}
+      <LineChart
+        coinHistory={coinHistory}
+        currentPrice={millify(cryptoDetails?.price)}
+        coinName={cryptoDetails?.name}
+      />
 
       {/* Statistics */}
       <Col className="stats-container">
@@ -130,42 +142,38 @@ const CryptoDetails = () => {
             <Title level={3} className="coin-details-heading">
               {cryptoDetails.name} Value Statistics
             </Title>
-            <p>An overview showing the stats of {cryptoDetails.main} </p>
+            <p>An overview showing the stats of {cryptoDetails.name} </p>
           </Col>
 
-          {stats.map((icon, title, value) => (
-            <Col className="coin-stats">
+          {stats.map(({ icon, title, value, index }) => (
+            <Col key={index} className="coin-stats">
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>
               </Col>
 
               <Text className="stats">{value}</Text>
-            
             </Col>
           ))}
-
         </Col>
         <Col className="other-stats-info">
           <Col className="coin-value-statistics-heading">
             <Title level={3} className="coin-details-heading">
               Other Statistics
             </Title>
-            <p>An overview showing the stats of all crypto currencies </p>
+            <p>Combined overview of all crypto currencies </p>
           </Col>
 
-          {genericStats.map((icon, title, value) => (
-            <Col className="coin-stats">
+          {genericStats.map(({ icon, title, value, index }) => (
+            <Col key={index} className="coin-stats">
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>
               </Col>
 
               <Text className="stats">{value}</Text>
-            
             </Col>
           ))}
-
         </Col>
       </Col>
 
@@ -173,25 +181,25 @@ const CryptoDetails = () => {
         <Row className="coin-desc">
           <Title level={3} className="coin-details-heading">
             What is {cryptoDetails.name}?
-            {HTMLReactParser(cryptoDetails.description)}
           </Title>
+          {HTMLReactParser(cryptoDetails.description)}
         </Row>
         <Col span="coin-links">
           <Title level={3} className="coin-details-heading">
             {cryptoDetails.name} Links
           </Title>
-          {cryptoDetails.links.map((link) => (
+          {cryptoDetails.links?.map((link) => (
             <Row className="coin-link" key={link.name}>
-              <Title level={5} className="link-name">{link.type}</Title>
+              <Title level={5} className="link-name">
+                {link.type}
+              </Title>
               <a href={link.url} target="_blank" rel="noreferrer">
                 {link.name}
               </a>
             </Row>
           ))}
         </Col>
-      
       </Col>
-
     </Col>
   )
 }

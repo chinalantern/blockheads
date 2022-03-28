@@ -38,6 +38,7 @@ const CryptoCurrencies = ({ simplified }) => {
         </div>
       )}
 
+      {/* Card */}
       <Row gutter={[32, 32]} className="crypto-card-container">
         {cryptos?.map((currency) => (
           <Col
