@@ -5,7 +5,6 @@ import { Card, Row, Col, Input } from 'antd'
 import millify from 'millify'
 
 import { useGetCryptosQuery } from '../../services/CryptoApi'
-import { log } from '../../utils/Helpers'
 
 // TODO add pagination
 const CryptoCurrencies = ({ simplified }) => {
