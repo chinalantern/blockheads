@@ -5,6 +5,8 @@ import { Card, Row, Col, Input } from 'antd'
 import millify from 'millify'
 
 import { useGetCryptosQuery } from '../../services/CryptoApi'
+import Loader from '../loader/Loader'
+
 
 // TODO add pagination
 const CryptoCurrencies = ({ simplified }) => {
@@ -22,8 +24,7 @@ const CryptoCurrencies = ({ simplified }) => {
     setCryptos(filteredData)
   }, [cryptosList, searchTerm])
 
-  // TODO fix
-  if (isFetching) return 'Loading...'
+  if (isFetching) return <Loader />
 
   return (
     <>

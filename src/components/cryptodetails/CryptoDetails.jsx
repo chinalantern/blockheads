@@ -20,6 +20,7 @@ import {
   useGetCryptoHistoryQuery,
 } from '../../services/CryptoApi'
 import LineChart from '../charts/LineChart'
+import Loader from '../loader/Loader'
 import { log } from '../../utils/Helpers'
 
 const { Title, Text } = Typography
@@ -36,7 +37,7 @@ const CryptoDetails = () => {
 
   const cryptoDetails = cryptoDetailsResponse?.data?.coin
 
-  if (isFetching) return 'Loading...'
+  if (isFetching) return <Loader />
 
   const stats = [
     {

@@ -37,7 +37,8 @@ const LineChart = ({ coinHistory, currentPrice, coinName }) => {
     )
   }
 
-
+  log(coinPrice)
+  
   const data = {
     labels: coinTimeStamp.reverse(),
     datasets: [
