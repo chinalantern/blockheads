@@ -45,11 +45,7 @@ const CryptoDetails = () => {
       icon: <DollarCircleOutlined />,
     },
     { title: 'Rank', value: cryptoDetails?.rank, icon: <NumberOutlined /> },
-    {
-      title: '24h Volume',
-      value: `$ ${cryptoDetails?.volume && millify(cryptoDetails?.volume)}`,
-      icon: <ThunderboltOutlined />,
-    },
+    { title: '24h Volume', value: `$ ${millify(cryptoDetails["24hVolume"])}`, icon: <ThunderboltOutlined /> },
     {
       title: 'Market Cap',
       value: `$ ${
@@ -67,6 +63,10 @@ const CryptoDetails = () => {
     },
   ]
 
+
+
+
+
   const genericStats = [
     {
       title: 'Number Of Markets',
@@ -79,7 +79,7 @@ const CryptoDetails = () => {
       icon: <MoneyCollectOutlined />,
     },
     {
-      title: 'Aprroved Supply',
+      title: 'Approved Supply',
       value: cryptoDetails?.supply?.confirmed ? (
         <CheckOutlined />
       ) : (
@@ -108,10 +108,10 @@ const CryptoDetails = () => {
     <Col className="coin-detail-container">
       <Col className="coin-heading-container">
         <Title level={2} className="coin-name">
-          {cryptoDetails.name} ({cryptoDetails.symbol}) Price
+          {cryptoDetails?.name} ({cryptoDetails?.symbol}) Price
         </Title>
         <p>
-          {cryptoDetails.name} live prices in USD. View value statistics. market
+          {cryptoDetails?.name} live prices in USD. View value statistics. market
           cap, and supply
         </p>
       </Col>
@@ -123,9 +123,7 @@ const CryptoDetails = () => {
         placeholder="Select time period"
         onChange={(value) => setTimePeriod(value)}
       >
-        {time.map((date, index) => (
-          <Option key={index}>{date} </Option>
-        ))}
+        {time.map((date, index) => <Option key={index}>{date} </Option>)}
       </Select>
 
       {/* Line Chart */}
@@ -184,7 +182,7 @@ const CryptoDetails = () => {
           </Title>
           {HTMLReactParser(cryptoDetails.description)}
         </Row>
-        <Col span="coin-links">
+        <Col className="coin-links">
           <Title level={3} className="coin-details-heading">
             {cryptoDetails.name} Links
           </Title>
