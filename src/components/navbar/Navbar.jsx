@@ -14,7 +14,7 @@ import icon from '../../images/cryptocurrency.png'
 
 const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState(true)
-  const [screenSize, setScreenSize] = useState(null)
+  const [screenSize, setScreenSize] = useState(undefined)
 
   useEffect(() => {
     // get screen width
@@ -30,7 +30,7 @@ const Navbar = () => {
 
 
   useEffect(() => { 
-    if(screenSize < 768) {
+    if(screenSize <= 800) {
       setActiveMenu(false)
     } else {
       setActiveMenu(true)
@@ -40,7 +40,7 @@ const Navbar = () => {
 
   
   return (
-    <div className="navcontainer">
+    <div className="nav-container">
       <div className="logo-container">
         <Avatar src={icon} />
         <Typography.Title level={2} className="logo">
