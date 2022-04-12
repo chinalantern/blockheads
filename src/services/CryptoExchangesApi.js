@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const key = process.env.REACT_APP_EXCHANGE_COIN_API_KEY
-console.log('heres the key', key)
 
 const authorizationHeaders = {
   //   'Accept': 'application/json',
@@ -21,9 +20,11 @@ export const cryptoExchangesApi = createApi({
     getCryptoExchanges: builder.query({
       query: () => createRequest('/v1/exchanges'),
     }),
+    getCryptoExchangesIcons: builder.query({
+      query: () => createRequest('/v1/exchanges/icons/32'),
+    }),
   }),
 })
 
-export const { useGetCryptoExchangesQuery } = cryptoExchangesApi
-
-// https://rest.coinapi.io/v1/exchanges?apikey=3F18515E-87E1-44F6-8E51-E323BB65E0A6
+export const { useGetCryptoExchangesQuery, useGetCryptoExchangesIconsQuery } =
+  cryptoExchangesApi
